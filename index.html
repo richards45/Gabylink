@@ -194,7 +194,7 @@
 
     .logo-wrapper.logo-pink-pulse {
       animation: logo-pink-breathing 2.1s ease-in-out infinite;
-      filter: saturate(1.15) brightness(1.02);
+      filter: brightness(1.02);
     }
 
     .logo-wrapper.logo-pink-pulse:hover {
@@ -582,10 +582,12 @@
       if (!wrapper || !logoImg) return;
       
       let isPinkMode = false;
+      const isMobile = window.innerWidth <= 768;
       const baseFilter = 'drop-shadow(0 10px 8px rgb(0 0 0 / 0.18))';
       
-      // Much more intense & beautiful pink transformation (gorgeous feminine glow around the actual logo shape)
-      const pinkFilter = 'drop-shadow(0 4px 8px rgb(251 207 232 / 0.7)) drop-shadow(0 12px 22px rgb(244 114 182 / 0.55)) brightness(0) saturate(100%) invert(16%) sepia(98%) saturate(5800%) hue-rotate(309deg) brightness(1.12) contrast(1.18)';
+      // Pink transformation - toned down saturation especially for mobile to prevent oversaturation
+      const pinkSat = isMobile ? '1600%' : '2200%';
+      const pinkFilter = `drop-shadow(0 3px 6px rgb(251 207 232 / 0.5)) drop-shadow(0 8px 14px rgb(244 114 182 / 0.35)) brightness(0) saturate(100%) invert(18%) sepia(95%) saturate(${pinkSat}) hue-rotate(305deg) brightness(1.08) contrast(1.1)`;
       
       wrapper.addEventListener('click', function(e) {
         // Big beautiful burst + ripple
@@ -605,13 +607,13 @@
         // Toggle pink feminine colors - glow lives only on the image filter (no wrapper rect)
         if (!isPinkMode) {
           logoImg.style.filter = pinkFilter;
-          wrapper.style.filter = 'saturate(1.15) brightness(1.02)';
+          wrapper.style.filter = isMobile ? 'brightness(1.02)' : 'saturate(1.08) brightness(1.02)';
           isPinkMode = true;
 
           // Subtle extra pop glow on the image itself (no box around wrapper)
           setTimeout(() => {
             if (isPinkMode && logoImg) {
-              logoImg.style.filter = pinkFilter + ' brightness(1.22)';
+              logoImg.style.filter = pinkFilter + ' brightness(1.05)';
             }
           }, 160);
           
@@ -640,9 +642,9 @@
       // Nice hover effect on logo (preview pink glow)
       wrapper.addEventListener('mouseenter', () => {
         if (!isPinkMode) {
-          logoImg.style.filter = baseFilter + ' brightness(1.08) saturate(1.1)';
+          logoImg.style.filter = baseFilter + ' brightness(1.05)';
         } else {
-          logoImg.style.filter = pinkFilter + ' brightness(1.28)';
+          logoImg.style.filter = pinkFilter + ' brightness(1.1)';
         }
       });
       
@@ -729,6 +731,7 @@
     function setupExtraHearts() {
       const wrapper = document.getElementById('logo-wrapper');
       let holdTimer = null;
+      const isMobile = window.innerWidth <= 768;
       
       wrapper.addEventListener('mousedown', () => {
         holdTimer = setTimeout(() => {
@@ -737,11 +740,12 @@
           createHeartBurst(wrapper);
           
           const img = wrapper.querySelector('img');
-          const strongPink = 'drop-shadow(0 4px 9px rgb(251 207 232 / 0.75)) drop-shadow(0 14px 26px rgb(244 114 182 / 0.6)) brightness(0) saturate(100%) invert(15%) sepia(98%) saturate(6200%) hue-rotate(310deg) brightness(1.15) contrast(1.2)';
+          const strongSat = isMobile ? '1400%' : '1800%';
+          const strongPink = `drop-shadow(0 3px 6px rgb(251 207 232 / 0.5)) drop-shadow(0 8px 14px rgb(244 114 182 / 0.35)) brightness(0) saturate(100%) invert(18%) sepia(95%) saturate(${strongSat}) hue-rotate(305deg) brightness(1.08) contrast(1.1)`;
           if (img) {
             img.style.filter = strongPink;
           }
-          wrapper.style.filter = 'saturate(1.2)';
+          wrapper.style.filter = isMobile ? 'brightness(1.02)' : 'saturate(1.1)';
           wrapper.classList.add('logo-pink-pulse');
         }, 620);
       });
